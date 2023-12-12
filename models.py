@@ -993,9 +993,9 @@ class SynthesizerTrn(nn.Module):
 
         l_length_sdp = self.sdp(x, x_mask, w, g=g)
         l_length_sdp = l_length_sdp / torch.sum(x_mask)
-        logw_mas = torch.log(w + 1e-6) * x_mask
-        logw_dp = self.dp(x, x_mask, g=g)
-        l_length_dp = torch.sum((logw_dp - logw_mas) ** 2, [1, 2]) / torch.sum(
+        logw_ = torch.log(w + 1e-6) * x_mask
+        logw = self.dp(x, x_mask, g=g)
+        l_length_dp = torch.sum((logw - logw_) ** 2, [1, 2]) / torch.sum(
             x_mask
         )  # for averaging
 
@@ -1017,7 +1017,7 @@ class SynthesizerTrn(nn.Module):
             x_mask,
             y_mask,
             (z, z_p, m_p, logs_p, m_q, logs_q),
-            (x, logw_dp, logw_mas),
+            (x, logw, logw_),
             g,
             loss_commit,
         )

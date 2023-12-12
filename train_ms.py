@@ -426,7 +426,7 @@ def train_and_evaluate(
                 x_mask,
                 z_mask,
                 (z, z_p, m_p, logs_p, m_q, logs_q),
-                (hidden_x, logw_dp, logw_mas),
+                (hidden_x, logw, logw_),
                 g,
                 loss_commit,
             ) = net_g(
@@ -479,8 +479,8 @@ def train_and_evaluate(
                 y_dur_hat_r, y_dur_hat_g = net_dur_disc(
                     hidden_x.detach(),
                     x_mask.detach(),
-                    logw_mas.detach(),
-                    logw_dp.detach(),
+                    logw_.detach(),
+                    logw.detach(),
                     g.detach(),
                 )
                 with autocast(enabled=False):
@@ -508,7 +508,7 @@ def train_and_evaluate(
             y_d_hat_r, y_d_hat_g, fmap_r, fmap_g = net_d(y, y_hat)
             if net_dur_disc is not None:
                 y_dur_hat_r, y_dur_hat_g = net_dur_disc(
-                    hidden_x, x_mask, logw_mas, logw_dp, g
+                    hidden_x, x_mask, logw_, logw, g
                 )
             with autocast(enabled=False):
                 loss_dur = torch.sum(l_length.float())
